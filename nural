@@ -1,0 +1,159 @@
+# parastoo afrasyabi 9703014
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = np.loadtxt('fruit.txt', dtype='str')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = np.delete(data,[1,2,3,6],axis=1)\n",
+    "data = np.delete(data,[0],axis=0)\n",
+    "data = data.astype(float)\n",
+    "data[data[:, 0] !=1, 0] = 0\n",
+    "y = data[:, 0].reshape(-1,1)\n",
+    "x = np.delete(data,[0],axis=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "inputSize = 2\n",
+    "outputSize = 1\n",
+    "hiddenSize = 3\n",
+    "W1 = np.random.randn(inputSize, hiddenSize) \n",
+    "W2 = np.random.randn(hiddenSize, outputSize)\n",
+    "\n",
+    "def forward(x,W1,W2):\n",
+    "    z1 = np.dot(x, W1) \n",
+    "    a1 = sigmoid(z1) \n",
+    "    z2 = np.dot(a1, W2) \n",
+    "    a2 = sigmoid(z2)\n",
+    "    return a2,z2\n",
+    "    \n",
+    "def sigmoid(s):\n",
+    "    return 1/(1+np.exp(-s))\n",
+    "\n",
+    "def sigmoidPrime(s):\n",
+    "  \n",
+    "    return s * (1 - s)\n",
+    "\n",
+    "def backward(X, y, o,z2,W1,W2):\n",
+    "    o_error = y - o \n",
+    "    o_delta = o_error*sigmoidPrime(o) \n",
+    "      \n",
+    "    o_delta\n",
+    "    z2_error = o_delta.dot(W2.T)  \n",
+    "    z2_delta = z2_error*sigmoidPrime(z2) \n",
+    "\n",
+    "    W1 += X.T.dot(z2_delta) \n",
+    "    W2 += z2.T.dot(o_delta)\n",
+    "    return W1,W2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "o,z2 = forward(x,W1,W2)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "W1,W2 = backward(x,y,o,z2,W1,W2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for i in range(10):\n",
+    "    o,z2 = forward(x,W1,W2)\n",
+    "    W1,W2 = backward(x,y,o,z2,W1,W2)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[-0.31483337]\n",
+      " [-0.66481114]\n",
+      " [-0.45882516]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print (W2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.15"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
